@@ -10,7 +10,7 @@ temp = 1.0
 mode = 1
 octave_len = 12
 states = 3
-tempo = 200
+tempo = 127
 volume_bass = 127
 volume_lead = 104
 pitch_offset_bass=0
@@ -28,9 +28,8 @@ if mode==0:
     model = get_test_model()
 else:
     model = get_test_model1()
-model.load_weights('models/model'+str(mode)+'.h5')
-
-player = song_player(tempo=200)
+model.load_weights('model'+str(mode)+'.h5')
+player = song_player(tempo=tempo)
 
 if test_filename is not None:
     song, _ = load_song(test_filename)
@@ -62,10 +61,12 @@ for step in song:
     x1 = x
     if mode==1:
         x1 = [x, prev_y]
+    start_time = round(time.time() * 1000)
     y = model.predict(x1)
+    total_time = start_time - round(time.time() * 1000)
     s = index2bio([sample(i, temp) for i in y[0]])
     prev_y[0, 0] = one_hot(s)
-    time.sleep(tempo/1000.)
+    time.sleep((tempo- total_time)/1000. )
     player.play_notes(s, volume=volume_lead, pitch_offset=pitch_offset_lead, track=1)
     s0 = index2bio([sample(i, temp) for i in st])
     player.play_notes(s0, volume=volume_bass, pitch_offset=pitch_offset_bass, track=0, sleep=False)
