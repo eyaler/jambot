@@ -46,8 +46,8 @@ def to_vector(notes, length):
         for _ in xrange(12):
             vector[-1].append('o')
     for note in notes:
-        start_of_note_index = note['start']/universal_sample_rate
-        end_of_note_index = (note['start']+note['duration'])/universal_sample_rate
+        start_of_note_index = int(round(note['start']/universal_sample_rate))
+        end_of_note_index = int(round((note['start']+note['duration'])/universal_sample_rate))
         note = note['note']
         note_list = vector[start_of_note_index]
         note_list[note] = 'b'
@@ -72,7 +72,7 @@ def trim_start(guitar_vector, bass_vector):
 
 def trim_end(guitar_vector, bass_vector):
     guitar_vector, bass_vector = trim_start(guitar_vector[::-1], bass_vector[::-1])
-    return guitar_vector[::--1], bass_vector[::-1]
+    return guitar_vector[::-1], bass_vector[::-1]
 
 
 def trim(bass_vector, guitar_vector):
@@ -110,7 +110,7 @@ def allign_parts(guitar, bass):
     bass_vector = to_vector(bass, length)
 
     guitar_vector, bass_vector = trim(guitar_vector, bass_vector)
-
+    #yield guitar_vector, bass_vector
     for parts in split_silence(bass_vector, guitar_vector):
         yield parts
 

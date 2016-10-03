@@ -5,7 +5,7 @@ from mido import Message
 import time
 from queue import Queue
 from threading import Thread
-#mido.set_backend('mido.backends.rtmidi')
+mido.set_backend('mido.backends.rtmidi')
 
 octave_len = 12
 states = 3
@@ -53,7 +53,7 @@ def index2bio(x):
 class song_player():
     def __init__(self, tempo, out_portname=None):
         self.state = [[False]*octave_len, [False]*octave_len]
-        self.tempo = tempo / 1000.
+        self.tempo = tempo/5000.
         self.key = key
         self.outport = mido.open_output(out_portname, autoreset=True)
 
@@ -66,11 +66,11 @@ class song_player():
             else:
                 self.play_notes(line, volume=volume[0], pitch_offset=pitch_offset[0])
 
-    def play_notes(self, line, volume=127, pitch_offset=0, track=0, sleep=True):
-        #if sleep:
-            #time.sleep(self.tempo)
+    def play_notes(self, line, volume=127, pitch_offset=0, track=0):
         for i, c in enumerate(line):
             if c == 'b' or (not self.state[track][i] and c=='i'):
+                m = Message('note_off', note=self.key + i + pitch_offset)
+                self.outport.send(m)
                 m = Message('note_on', note=self.key + i + pitch_offset, velocity=volume)
                 self.outport.send(m)
                 self.state[track][i] = True
