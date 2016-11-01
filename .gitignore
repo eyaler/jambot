@@ -19,3 +19,8 @@ portmidi.dll
 pygame_demo.py
 models/model1.h5
 tbd.txt
+parser2/__init__.pyc
+parser2/config.pyc
+parser2/gp_file_yielder.pyc
+parser2/parse_gp_file.pyc
+utils.pyc
