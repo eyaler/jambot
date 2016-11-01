@@ -4,7 +4,8 @@ from time import sleep
 
 
 player = song_player(tempo=universal_sample_rate)
-file_name = '/Users/talbaumel/Dropbox/Guitar Pro Tabs - 55000/G/Gorillaz/Gorillaz - Punk.gp4'
+#file_name = '/Users/talbaumel/Dropbox/Guitar Pro Tabs - 55000/B/Beatles (The)/Beatles (The) - Rocky Raccoon.gp3'
+file_name = '/Users/talbaumel/Dropbox/Ramones (The) - BlitzKrieg Bop (2)0'
 for guitar, bass in parse_gp_file(file_name):
     print 'part'
     song = zip(bass, guitar)
