@@ -61,9 +61,9 @@ for step in song:
     x1 = x
     if mode==1:
         x1 = [x, prev_y]
-    start_time = round(time.time() * 1000)
+    start_time = time.time() * 1000
     y = model.predict(x1)
-    total_time = start_time - round(time.time() * 1000)
+    total_time = start_time - 2(time.time() * 1000)
     s = index2bio([sample(i, temp) for i in y[0]])
     prev_y[0, 0] = one_hot(s)
     #time.sleep((tempo- total_time)/1000. )
