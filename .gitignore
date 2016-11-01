@@ -24,3 +24,4 @@ parser2/config.pyc
 parser2/gp_file_yielder.pyc
 parser2/parse_gp_file.pyc
 utils.pyc
+.DS_Store
