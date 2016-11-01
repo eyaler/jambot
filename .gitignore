@@ -1,0 +1,21 @@
+.idea/encodings.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/jambot.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+__pycache__/net.cpython-34.pyc
+__pycache__/utils.cpython-34.pyc
+models/model0.h5
+models/model1 - 24701.h5
+models/model1 - overfit.h5
+models/model1 - pink.h5
+models/model1 - ramons.h5
+models/model1 - tal.h5
+models/model1.h5
+portmidi.dll
+pygame_demo.py
+models/model1.h5
+tbd.txt

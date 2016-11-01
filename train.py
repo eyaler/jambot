@@ -1,4 +1,9 @@
-# must of the output are zero
+# use author folders in parser
+# and load model
+# truncated backprop in time, unroll, consume less
+# do i need separate train/test models?
+# masking/end of message symbol
+# most of the output are zero
 # add end-end to time descritization (similar to start-start); do it globally instead of locally?
 # attention
 # time windows
@@ -24,10 +29,11 @@
 # how does alignment work for input (in real life you are not exactly on the beat - allow noise for this)
 # play in loop longer than song length
 # compare overfit on one file
-# weightd logloss?
+# weightd logloss? give more weight to b?
 # where to put the sleep?
 # make sure we do not play for zero input?
 # why did i have(len(X)==0) problems?
+
 
 from keras.preprocessing.sequence import pad_sequences
 import keras.backend as K
@@ -83,8 +89,6 @@ def load_chunk(current_filenames):
         lens = None
 
 
-    X = pad_sequences(X, maxlen=hard_max_len)
-    y = pad_sequences(y, maxlen=hard_max_len)
     if mode == 1:
         y_helper = np.zeros_like(y)
         y_helper[:, 1:] = y[:, :-1]
@@ -109,8 +113,9 @@ best_loss = None
 if load_model and os.path.exists('models/model'+str(mode)+'.h5'):
     model.load_weights('models/model'+str(mode)+'.h5')
     if len(y_valid) > 0:
-        best_loss = model.evaluate(X_valid, y_valid, batch_size=batch_size)
-        print ('loaded val_loss=%.4f val_acc=%.4f val_bacc=%.4f'%(best_loss[0],best_loss[1],best_loss[2]))
+        val_loss = model.evaluate(X_valid, y_valid, batch_size=batch_size)
+        print ('loaded val_loss=%.4f val_acc=%.4f val_bacc=%.4f'%(val_loss[0],val_loss[1],val_loss[2]))
+        best_loss = val_loss[0]
 
 start = time()
 for epoch in range(epochs):
@@ -129,11 +134,11 @@ for epoch in range(epochs):
         print('chunk took %.1f min' % ((time() - chunk_start)/60))
     print ('epoch took %.1f min / total %.1f min'%((time()-epoch_start)/60, (time()-start)/60))
     if len(y_valid)>0:
-        loss = model.evaluate(X_valid, y_valid, batch_size=batch_size)
-        print ('val_loss=%.4f val_acc=%.4f val_bacc=%.4f'%(loss[0],loss[1],loss[2]))
-        if best_loss is None or loss[0]<best_loss:
-            best_loss = loss[0]
-            model.save_weights('model'+str(mode)+'.h5')
+        val_loss = model.evaluate(X_valid, y_valid, batch_size=batch_size)
+        print ('val_loss=%.4f val_acc=%.4f val_bacc=%.4f'%(val_loss[0],val_loss[1],val_loss[2]))
+        if best_loss is None or val_loss[0]<best_loss:
+            best_loss = val_loss[0]
+            model.save_weights('models/model'+str(mode)+'.h5')
 if len(y_valid)==0:
-    model.save_weights('model'+str(mode)+'.h5')
+    model.save_weights('models/model'+str(mode)+'.h5')
 print('training finished %.1f min' % ((time() - start)/60))
