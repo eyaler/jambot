@@ -1,5 +1,5 @@
 from parser2 import parse_gp_file, universal_sample_rate
-from utils import song_player
+from util import song_player
 from time import sleep
 
 

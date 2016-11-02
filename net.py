@@ -1,11 +1,11 @@
 from __future__ import division
 from keras.layers import LSTM, GRU, Input, TimeDistributed, Dense, Activation, Reshape, merge
 from keras.models import Model
+from config import *
 
-octave_len = 12
 embedding_size = 12
 lstm_size = 128
-states = 3
+
 
 def get_train_model(max_len):
     input = Input(shape=(max_len, octave_len, states))
@@ -46,6 +46,7 @@ def get_train_model1(max_len):
 
 def get_test_model1():
     input1 = Input(batch_shape=(1, 1, octave_len, states))
+
     a1 = Reshape([1, octave_len*states])(input1)
     a1 = TimeDistributed(Dense(embedding_size))(a1)
 

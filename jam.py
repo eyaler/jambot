@@ -1,35 +1,33 @@
 from __future__ import division
-from utils import load_song, index2bio, song_player, one_hot, get_bio
+from util import load_song, index2bio, song_player, one_hot, get_bio
 from net import get_test_model, get_test_model1
 import numpy as np
 import time
+from config import *
 
 test_filename = None
 #test_filename = 'd:/data/jambot/Ramones (The) - Blitzkrieg Bop (4).gp333532'
 
 temp = 1.0
 mode = 1
-octave_len = 12
-states = 3
 tempo = 200
 volume_bass = 127
 volume_lead = 104
 pitch_offset_bass=0
 pitch_offset_lead=12
 
-def sample(preds, temperature=1):
-    preds = np.asarray(preds).astype('float64')
-    preds = np.log(preds) / temperature
-    exp_preds = np.exp(preds)
-    preds = exp_preds / np.sum(exp_preds)
-    probas = np.random.multinomial(1, preds, 1)
-    return np.argmax(probas)
+def sample(probs, temperature=1):
+    if temperature > 0:
+        probs = pow(probs, 1/temperature)
+        probs = probs/np.sum(probs)
+        probs = np.random.multinomial(1, probs)
+    return np.argmax(probs)
 
 if mode==0:
     model = get_test_model()
 else:
     model = get_test_model1()
-model.load_weights('models/model'+str(mode)+'.h5')
+model.load_weights('models/model'+str(mode)+'.h5', by_name=True)
 player = song_player(tempo=tempo)
 
 if test_filename is not None:

@@ -1,5 +1,5 @@
 from __future__ import division
-from utils import song_player
+from util import song_player
 import csv
 
 test_filename = 'd:/data/jambot/Ramones (The) - Blitzkrieg Bop (4).gp333532'

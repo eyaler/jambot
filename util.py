@@ -6,10 +6,9 @@ from mido import Message
 import time
 from queue import Queue
 from threading import Thread
+from config import *
 #mido.set_backend('mido.backends.rtmidi')
 
-octave_len = 12
-states = 3
 key = 48
 
 

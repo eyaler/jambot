@@ -1,6 +1,6 @@
 # use author folders in parser
-# and load model
-# truncated backprop in time, unroll, consume less
+# play_parsed vs play_file
+# truncated backprop in time, consume less
 # do i need separate train/test models?
 # masking/end of message symbol
 # most of the output are zero
@@ -19,7 +19,6 @@
 # compare transposed scale vs not
 # due to multiple versions validate may have same songs as train
 # save stats, plot history, how to deal with chunked training?
-# global config params
 # learn velocity
 # if only one file take its size
 # if no validation use train loss for saving
@@ -37,11 +36,13 @@
 from __future__ import division
 from keras.preprocessing.sequence import pad_sequences
 import keras.backend as K
+from keras.models import load_model
 import os
 import numpy as np
-from utils import load_song
+from util import load_song
 from net import get_train_model, get_train_model1
 from time import time
+
 
 limit = None
 valid_frac = 0.1
@@ -51,7 +52,8 @@ batch_size = 32
 mode = 1
 data_folder = 'd:/data/jambot'
 hard_max_len = 6000
-load_model = False
+load_trained_model = False
+reset_optimizer = False
 
 filenames = os.listdir(data_folder)[:limit]
 np.random.seed(42)
@@ -96,27 +98,28 @@ def load_chunk(current_filenames):
         X = [X, y_helper]
     return X, y
 
-def bacc(y_true, y_pred): #not finished
-    return K.mean(K.equal(K.argmax(y_true, axis=-1),
-                   K.argmax(y_pred, axis=-1)))
-
 
 y_valid = []
 X_valid, y_valid = load_chunk(f_valid)
 
-if mode==0:
-    model = get_train_model(hard_max_len)
-else:
-    model = get_train_model1(hard_max_len)
-model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy', bacc])
-
+should_reset_optimizer = False
 best_loss = None
-if load_model and os.path.exists('models/model'+str(mode)+'.h5'):
-    model.load_weights('models/model'+str(mode)+'.h5')
+if load_trained_model:
+    model = load_model('models/model'+str(mode)+'.h5')
     if len(y_valid) > 0:
         val_loss = model.evaluate(X_valid, y_valid, batch_size=batch_size)
-        print ('loaded val_loss=%.4f val_acc=%.4f val_bacc=%.4f'%(val_loss[0],val_loss[1],val_loss[2]))
+        print ('loaded val_loss=%.4f val_acc=%.4f'%(val_loss[0],val_loss[1]))
         best_loss = val_loss[0]
+    if reset_optimizer:
+        should_reset_optimizer = True
+else:
+    if mode==0:
+        model = get_train_model(hard_max_len)
+    else:
+        model = get_train_model1(hard_max_len)
+    should_reset_optimizer = True
+if should_reset_optimizer:
+    model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
 start = time()
 for epoch in range(epochs):
@@ -136,10 +139,10 @@ for epoch in range(epochs):
     print ('epoch took %.1f min / total %.1f min'%((time()-epoch_start)/60, (time()-start)/60))
     if len(y_valid)>0:
         val_loss = model.evaluate(X_valid, y_valid, batch_size=batch_size)
-        print ('val_loss=%.4f val_acc=%.4f val_bacc=%.4f'%(val_loss[0],val_loss[1],val_loss[2]))
+        print ('val_loss=%.4f val_acc=%.4f'%(val_loss[0],val_loss[1]))
         if best_loss is None or val_loss[0]<best_loss:
             best_loss = val_loss[0]
-            model.save_weights('models/model'+str(mode)+'.h5')
+            model.save('models/model'+str(mode)+'.h5')
 if len(y_valid)==0:
-    model.save_weights('models/model'+str(mode)+'.h5')
+    model.save('models/model'+str(mode)+'.h5')
 print('training finished %.1f min' % ((time() - start)/60))
