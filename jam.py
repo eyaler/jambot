@@ -1,12 +1,13 @@
+from __future__ import division
 from utils import load_song, index2bio, song_player, one_hot, get_bio
 from net import get_test_model, get_test_model1
 import numpy as np
 import time
 
 test_filename = None
-test_filename = '/Users/talbaumel/Dropbox/Simon & Garfunkel - A Hazy Shade Of Winter0'
+#test_filename = 'd:/data/jambot/Ramones (The) - Blitzkrieg Bop (4).gp333532'
 
-temp = 1.25
+temp = 1.0
 mode = 1
 octave_len = 12
 states = 3
@@ -16,7 +17,7 @@ volume_lead = 104
 pitch_offset_bass=0
 pitch_offset_lead=12
 
-def sample(preds, temperature=1.):
+def sample(preds, temperature=1):
     preds = np.asarray(preds).astype('float64')
     preds = np.log(preds) / temperature
     exp_preds = np.exp(preds)
@@ -61,13 +62,13 @@ for step in song:
     x1 = x
     if mode==1:
         x1 = [x, prev_y]
-    start_time = time.time() * 1000
+    start_time = time.time()
     y = model.predict(x1)
-    total_time = start_time - (time.time() * 1000)
+    total_time = start_time - time.time()
     s = index2bio([sample(i, temp) for i in y[0]])
     prev_y[0, 0] = one_hot(s)
-    #time.sleep((tempo- total_time)/1000. )
-    time.sleep((tempo) / 1000.)
+    if tempo/1000>total_time:
+        time.sleep(tempo/1000-total_time)
     player.play_notes(s, volume=volume_lead, pitch_offset=pitch_offset_lead, track=1)
     s0 = index2bio([sample(i, temp) for i in st])
     player.play_notes(s0, volume=volume_bass, pitch_offset=pitch_offset_bass, track=0)

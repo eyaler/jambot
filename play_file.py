@@ -1,3 +1,4 @@
+from __future__ import division
 from utils import song_player
 import csv
 

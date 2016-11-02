@@ -1,3 +1,4 @@
+from __future__ import division
 from keras.layers import LSTM, GRU, Input, TimeDistributed, Dense, Activation, Reshape, merge
 from keras.models import Model
 

@@ -30,11 +30,11 @@
 # play in loop longer than song length
 # compare overfit on one file
 # weightd logloss? give more weight to b?
-# where to put the sleep?
+# where to put the sleep? fix tempo
 # make sure we do not play for zero input?
 # why did i have(len(X)==0) problems?
 
-
+from __future__ import division
 from keras.preprocessing.sequence import pad_sequences
 import keras.backend as K
 import os

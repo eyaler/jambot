@@ -1,3 +1,4 @@
+from __future__ import division
 import csv
 import numpy as np
 import mido
@@ -5,7 +6,7 @@ from mido import Message
 import time
 from queue import Queue
 from threading import Thread
-mido.set_backend('mido.backends.rtmidi')
+#mido.set_backend('mido.backends.rtmidi')
 
 octave_len = 12
 states = 3
@@ -53,7 +54,7 @@ def index2bio(x):
 class song_player():
     def __init__(self, tempo, out_portname=None):
         self.state = [[False]*octave_len, [False]*octave_len]
-        self.tempo = tempo/5000.
+        self.tempo = tempo/1000.
         self.key = key
         self.outport = mido.open_output(out_portname, autoreset=True)
 
@@ -62,7 +63,7 @@ class song_player():
             time.sleep(self.tempo)
             if isinstance(line,list) or isinstance(line,tuple):
                 self.play_notes(line[0], volume=volume[0], pitch_offset=pitch_offset[0], track=0)
-                self.play_notes(line[1], volume=volume[1], pitch_offset=pitch_offset[1], track=1, sleep=False)
+                self.play_notes(line[1], volume=volume[1], pitch_offset=pitch_offset[1], track=1)
             else:
                 self.play_notes(line, volume=volume[0], pitch_offset=pitch_offset[0])
 
@@ -86,8 +87,7 @@ def listener(q, in_portname=None):
             q.put(message)
 
 
-def get_bio(tempo=0, in_portname=None):
-    tempo = tempo/1000.
+def get_bio(in_portname=None):
     q = Queue()
     t1 = Thread(target=listener, args=(q, in_portname))
     t1.start()
@@ -95,7 +95,6 @@ def get_bio(tempo=0, in_portname=None):
     state = ['o'] * octave_len
     while True:
 
-        #time.sleep(tempo)
         for i, c in enumerate(state):
             if c == 'b':
                 state[i] = 'i'
@@ -117,5 +116,5 @@ def get_bio(tempo=0, in_portname=None):
 
 
 if __name__ == '__main__':
-    for state in get_bio(tempo = 200):
+    for state in get_bio():
         print (state)
