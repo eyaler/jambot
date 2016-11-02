@@ -15,4 +15,4 @@ def yield_gp_files(gp_folder):
                 if file_name.startswith('.'):
                     continue
                 file_name = band + file_name
-                yield file_name
+                yield file_name, band.split('/')[-2]

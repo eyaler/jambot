@@ -36,6 +36,7 @@ def get_guitar_bass(song):
 
 
 def get_length(notes):
+    if not notes: return 0
     return max(map(lambda note: note['start']+note['duration'], notes))
 
 
