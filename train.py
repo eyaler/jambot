@@ -88,7 +88,8 @@ def load_chunk(current_filenames):
             np.percentile(lens, 90), np.percentile(lens, 95)))
         lens = None
 
-
+    X = pad_sequences(X, maxlen=hard_max_len)
+    y = pad_sequences(y, maxlen=hard_max_len)
     if mode == 1:
         y_helper = np.zeros_like(y)
         y_helper[:, 1:] = y[:, :-1]
