@@ -11,7 +11,7 @@ temp = 1.0
 mode = 1
 octave_len = 12
 states = 3
-tempo = 70
+tempo = 200
 volume_bass = 127
 volume_lead = 104
 pitch_offset_bass=0
@@ -37,7 +37,7 @@ if test_filename is not None:
     s2 = song.shape[1]
     s3 = song.shape[2]
 else:
-    song = get_bio(tempo=0)
+    song = get_bio()
     s2 = octave_len
     s3 = states
 x = np.zeros([1, 1, s2, s3])
