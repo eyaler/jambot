@@ -1,4 +1,5 @@
 # use author folders in parser
+# use train/net from writer
 # play_parsed vs play_file
 # truncated backprop in time, consume less
 # do i need separate train/test models?
@@ -35,7 +36,6 @@
 
 from __future__ import division
 from keras.preprocessing.sequence import pad_sequences
-import keras.backend as K
 from keras.models import load_model
 import os
 import numpy as np
