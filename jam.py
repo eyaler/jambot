@@ -7,10 +7,11 @@ from config import *
 
 test_filename = None
 #test_filename = 'd:/data/jambot/Ramones (The) - Blitzkrieg Bop (4).gp333532'
+test_filename = 'd:/data/jambot/Simon & Garfunkel/Simon & Garfunkel - A Hazy Shade Of Winter0'
 
-temp = 1.0
+temp = 1.25
 mode = 1
-tempo = 200
+tempo = 70
 volume_bass = 127
 volume_lead = 104
 pitch_offset_bass=0
@@ -62,7 +63,7 @@ for step in song:
         x1 = [x, prev_y]
     start_time = time.time()
     y = model.predict(x1)
-    total_time = start_time - time.time()
+    total_time = time.time()-start_time
     s = index2bio([sample(i, temp) for i in y[0]])
     prev_y[0, 0] = one_hot(s)
     if tempo/1000>total_time:

@@ -22,9 +22,9 @@ def get_test_model():
     a = Reshape([1, octave_len*states])(input)
     a = TimeDistributed(Dense(embedding_size))(a)
     a = LSTM(lstm_size, stateful=True)(a)
-    a = Dense(octave_len*states)(a)
+    a = Dense(octave_len*states, name='timedistributed_3')(a)
     a = Reshape([octave_len, states])(a)
-    output = Activation('softmax')(a)
+    output = Activation('softmax', name='timedistributed_4')(a)
     return Model(input, output)
 
 def get_train_model1(max_len):
@@ -46,7 +46,6 @@ def get_train_model1(max_len):
 
 def get_test_model1():
     input1 = Input(batch_shape=(1, 1, octave_len, states))
-
     a1 = Reshape([1, octave_len*states])(input1)
     a1 = TimeDistributed(Dense(embedding_size))(a1)
 
@@ -57,7 +56,7 @@ def get_test_model1():
     a = merge([a1, a2], mode='concat')
 
     a = LSTM(lstm_size, stateful=True)(a)
-    a = Dense(octave_len*states)(a)
+    a = Dense(octave_len*states, name='timedistributed_3')(a)
     a = Reshape([octave_len, states])(a)
-    output = Activation('softmax')(a)
+    output = Activation('softmax', name='timedistributed_4')(a)
     return Model([input1, input2], output)

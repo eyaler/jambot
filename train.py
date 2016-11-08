@@ -1,4 +1,3 @@
-# use author folders in parser
 # use train/net from writer
 # play_parsed vs play_file
 # truncated backprop in time, consume less
@@ -55,9 +54,13 @@ hard_max_len = 6000
 load_trained_model = False
 reset_optimizer = False
 
-filenames = os.listdir(data_folder)[:limit]
+authors = os.listdir(data_folder)
+filenames = []
+for author in authors:
+    filenames += [author + '/' + filename for filename in os.listdir(data_folder+'/'+author)]
 np.random.seed(42)
 np.random.shuffle(filenames)
+filenames = filenames[:limit]
 f_valid= filenames[:int(len(filenames)*valid_frac)]
 f_train = filenames[int(len(filenames)*valid_frac):]
 chunks = 1
