@@ -4,7 +4,7 @@ from keras.models import Model
 from config import *
 
 embedding_size = 12
-lstm_size = 512
+lstm_size = 128
 lstm_layers = 1
 
 def get_train_model(max_len):

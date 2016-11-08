@@ -42,7 +42,6 @@ from util import load_song
 from net import get_train_model, get_train_model1
 from time import time
 
-
 limit = None
 valid_frac = 0.1
 epochs = 1000
