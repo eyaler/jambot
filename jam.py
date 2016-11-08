@@ -28,7 +28,7 @@ if mode==0:
     model = get_test_model()
 else:
     model = get_test_model1()
-model.load_weights('models/model'+str(mode)+'.h5', by_name=True)
+model.load_weights('models/model'+str(mode)+'.h5')
 player = song_player(tempo=tempo)
 
 if test_filename is not None:
